@@ -1,0 +1,24 @@
+{
+  "name": "phel-lang/phel-scaffolding",
+  "keywords": ["phel","lisp","functional","language"],
+  "homepage": "https://phel-lang.org/",
+  "license": "MIT",
+  "require": {
+    "ext-readline": "*",
+    "phel-lang/phel-lang": "^0.3"
+  },
+  "minimum-stability": "dev",
+  "extra": {
+    "phel": {
+      "loader": {
+        "phel-scaffolding\\": "src/"
+      },
+      "loader-dev": {
+        "phel-scaffolding-tests\\": "tests/"
+      },
+      "tests": [
+          "tests/"
+      ]
+    }
+  }
+}

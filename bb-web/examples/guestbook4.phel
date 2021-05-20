@@ -1,0 +1,94 @@
+(ns app\guestbook4
+  (:require phel\http)
+  (:require phel\html :refer [html doctype])
+  (:require mabasic\json\json))
+
+(defn home-html [cljs-code]
+  (html
+    (doctype :html5)
+    [:html
+     [:head
+      [:meta @{:charset "UTF-8"}]
+      [:meta @{:name "viewport" :content "width=device-width, initial-scale=1"}]
+      [:link @{:rel "shortcut icon" :href "data:,"}]
+      [:link @{:rel "apple-touch-icon" :href "data:,"}]
+      [:link @{:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
+      [:script @{:src "./js/bb_web/bb_web.js"}]
+      [:title "Guestbook 4"]]
+     [:body
+      [:div @{:id "cljs-app"} cljs-code]
+      [:script @{:type "application/javascript"
+                 :src "./examples/runcljs.js"}]]]))
+
+(defn date []
+  (php/date_default_timezone_set "Europe/Vienna")
+  (php/date php/DATE_RFC2822))
+
+(def filename "./examples/o.txt")
+
+(defn writefile[fname txt]
+  (let [myfile (php/fopen fname "a")
+        code (php/fwrite myfile (str txt "\n"))
+        _ (php/fclose myfile)]
+    txt))
+
+(defn eprint [e]
+  (writefile "klmlog.txt" (print-str e)))
+
+(defn home-save-message! [request]
+  (writefile filename
+             (-> (json/decode (php/file_get_contents "php://input"))
+                 (put :timestamp (date))
+                 json/encode)))
+
+(defn readfile []
+  (let [empty @{}]
+    (->> (php/substr (php/file_get_contents filename) 0 -1)
+         (php/explode "\n")
+         (map json/decode)
+         (put empty :messages)
+         json/encode)))
+
+(defn home-message-list []
+  @{:status 200
+    :headers @{"Content-Type" "application/json"}
+    :body (readfile)})
+
+(defn home-render [_]
+  @{:status 200
+    :body (home-html (php/file_get_contents "./examples/guestbook_4.cljs"))})
+
+(defstruct route [method url query page])
+
+(def routes
+  [(route "GET" "/" "" home-render)
+   (route "GET" "/" "messages" home-message-list)
+   (route "POST" "/" "message" home-save-message!)])
+
+(defn route-match [request routes]
+  (let
+      [query (get (get request :uri) :query)
+       altquery (if (nil? query) "" query)
+       route (find
+               (fn [route]
+                 (and
+                   (=
+                     (get route :url)
+                     (get (get request :uri) :path))
+                   (=
+                     (get route :method)
+                     (get request :method))
+                   (=
+                     (get route :query) altquery)))
+               routes)]
+    ((get route :page) request)))
+
+(defn emit-response [response]
+  (let [rsp (http/create-response-from-table response)]
+    (http/emit-response rsp)))
+
+(def request (http/request-from-globals))
+
+# (eprint request)
+
+(emit-response (route-match request routes))

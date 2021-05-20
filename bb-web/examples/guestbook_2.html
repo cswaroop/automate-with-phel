@@ -1,0 +1,24 @@
+  <!DOCTYPE html>
+  <html>
+
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="shortcut icon" href="data:,">
+      <link rel="icon" href="data:,">
+      <link rel="apple-touch-icon" href="data:,">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+      <script>{% safe %} {{bb-web-js}} {% endsafe %}</script>
+      <title>Guestbook 2</title>
+  </head>
+
+  <body>
+      <input id="token" type="hidden" value="{{csrf-token}}">
+      <div id="cljs-app">
+          {% safe %} {{cljs-code}} {% endsafe %}
+      </div>
+
+      <script>bb_web.app.run("cljs-app")</script>
+  </body>
+
+  </html>

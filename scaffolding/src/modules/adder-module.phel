@@ -1,0 +1,6 @@
+(ns phel-scaffolding\modules\adder-module)
+
+(defn adder
+  "An example of a function."
+  [& numbers]
+  (apply + numbers))
