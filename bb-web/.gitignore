@@ -29,3 +29,4 @@ cgi-bin/hy/models.pyc
 cgi-bin/test/guestbook/__pycache__/
 
 /vendor/
+/klmlog.txt
