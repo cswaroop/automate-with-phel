@@ -12,7 +12,7 @@ Examples go from "Hello World!" to backend features like anti forgery protection
 ## Phel/PHP backend
 [Phel](https://phel-lang.org) is inspired by Clojure, it compiles to [PHP](https://www.php.net). Using Phel as backend language allows ClojureScript to be served on cheap shared hosting whilst still remaining in the Lisp paradigm.
 
-You need to install PHP 7.4 (or later). Then download Phel with:
+You need to install PHP 8.0 (or later). Then download Phel with:
 ```
 php composer.phar install
 
@@ -21,7 +21,7 @@ Start a server with:
 ```
 php -S localhost:8000
 ```
-Then, in the adress bar of your browser, type:
+Then, in the address bar of your browser, type:
 ```
 http://localhost:8000
 ```

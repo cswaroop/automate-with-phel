@@ -1,5 +1,7 @@
 <?php
 
-$rt = require __DIR__ .'/vendor/PhelRuntime.php';
+use Phel\Phel;
 
-$rt->loadNs('app\guestbook4');
+require __DIR__ . '/vendor/autoload.php';
+
+Phel::run(__DIR__, 'app\guestbook4');
